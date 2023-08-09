@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 import com.google.gson.Gson;
 import hu.agnos.cube.meta.dto.CubeList;
 import hu.agnos.cube.driver.ResultSet;
+import org.apache.http.client.utils.URIBuilder;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -32,11 +34,14 @@ public class CubeClient {
         public Optional<ResultSet[]> getData(String serviceBaseUri, String cubeName, String baseVector, String drillVectors) {
         ResultSet[] result = null;
         try {
+            URI uri = new URIBuilder(serviceBaseUri + "/data")
+                    .addParameter("name", cubeName)
+                    .addParameter("base", baseVector)
+                    .addParameter("drill", drillVectors)
+                    .build();
+
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(serviceBaseUri + "/data"))
-                    .header("name", cubeName)                    
-                    .header("base", baseVector)
-                    .header("drill", drillVectors)
+                    .uri(uri)
                     .timeout(Duration.of(20, SECONDS))
                     .GET()
                     .build();
@@ -101,9 +106,12 @@ public class CubeClient {
     public Optional<String[]> getHierarchyHeaderOfCube(String serviceBaseUri, String cubeName) {
         String[] result = null;
         try {
+            URI uri = new URIBuilder(serviceBaseUri + "/hierarchy_header")
+                    .addParameter("name", cubeName)
+                    .build();
+
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(serviceBaseUri + "/hierarchy_header"))
-                    .header("name", cubeName)
+                    .uri(uri)
                     .timeout(Duration.of(10, SECONDS))
                     .GET()
                     .build();
@@ -125,9 +133,13 @@ public class CubeClient {
     public Optional<String[]> getMeasureHeaderOfCube(String serviceBaseUri, String cubeName) {
         String[] result = null;
         try {
+
+            URI uri = new URIBuilder(serviceBaseUri + "/measure_header")
+                    .addParameter("name", cubeName)
+                    .build();
+
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(serviceBaseUri + "/measure_header"))
-                    .header("name", cubeName)
+                    .uri(uri)
                     .timeout(Duration.of(10, SECONDS))
                     .GET()
                     .build();
