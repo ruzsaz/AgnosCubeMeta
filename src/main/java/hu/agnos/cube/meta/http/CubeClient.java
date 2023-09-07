@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import com.google.gson.Gson;
 import hu.agnos.cube.meta.dto.CubeList;
 import hu.agnos.cube.driver.ResultSet;
+import hu.agnos.cube.meta.dto.HierarchyDTO;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.util.ArrayList;
@@ -147,6 +148,34 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             result = new Gson().fromJson(response.body(), String[].class);
+        } catch (URISyntaxException | IOException | InterruptedException ex) {
+            Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (result != null) {
+            return Optional.ofNullable(result);
+        } else {
+            return Optional.empty();
+        }
+
+    }
+
+     public Optional<HierarchyDTO> getHierarchy(String serviceBaseUri, String cubeName, String hierarchyName) {
+        HierarchyDTO result = null;
+        try {
+            URI uri = new URIBuilder(serviceBaseUri + "/hierarchy")
+                    .addParameter("cubename", cubeName)
+                    .addParameter("hierarchyname", hierarchyName)
+                    .build();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .timeout(Duration.of(10, SECONDS))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = HttpClient.newHttpClient()
+                    .send(request, BodyHandlers.ofString());
+            result = new Gson().fromJson(response.body(), HierarchyDTO.class);
         } catch (URISyntaxException | IOException | InterruptedException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
