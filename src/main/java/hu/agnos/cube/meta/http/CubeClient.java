@@ -32,7 +32,13 @@ import java.util.Optional;
  */
 public class CubeClient {
 
-        public Optional<ResultSet[]> getData(String serviceBaseUri, String cubeName, String baseVector, String drillVectors) {
+    String serviceBaseUri;
+
+    public CubeClient(String serviceBaseUri) {
+        this.serviceBaseUri = serviceBaseUri;
+    }
+
+    public Optional<ResultSet[]> getData(String cubeName, String baseVector, String drillVectors) {
         ResultSet[] result = null;
         try {
             URI uri = new URIBuilder(serviceBaseUri + "/data")
@@ -58,7 +64,7 @@ public class CubeClient {
     }
 
     
-    public Optional<CubeList> getCubesNameAndDate(String serviceBaseUri) {
+    public Optional<CubeList> getCubesNameAndDate() {
         CubeList cubeList = null;
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -77,7 +83,7 @@ public class CubeClient {
 
     }
 
-    public Optional<List<String>> getCubesName(String serviceBaseUri) {
+    public Optional<List<String>> getCubesName() {
         CubeList cubeList = null;
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -104,7 +110,7 @@ public class CubeClient {
 
     }
 
-    public Optional<String[]> getHierarchyHeaderOfCube(String serviceBaseUri, String cubeName) {
+    public Optional<String[]> getHierarchyHeaderOfCube(String cubeName) {
         String[] result = null;
         try {
             URI uri = new URIBuilder(serviceBaseUri + "/hierarchy_header")
@@ -131,7 +137,7 @@ public class CubeClient {
 
     }
 
-    public Optional<String[]> getMeasureHeaderOfCube(String serviceBaseUri, String cubeName) {
+    public Optional<String[]> getMeasureHeaderOfCube(String cubeName) {
         String[] result = null;
         try {
 
@@ -159,7 +165,7 @@ public class CubeClient {
 
     }
 
-     public Optional<HierarchyDTO> getHierarchy(String serviceBaseUri, String cubeName, String hierarchyName) {
+     public Optional<HierarchyDTO> getHierarchy(String cubeName, String hierarchyName) {
         HierarchyDTO result = null;
         try {
             URI uri = new URIBuilder(serviceBaseUri + "/hierarchy")
