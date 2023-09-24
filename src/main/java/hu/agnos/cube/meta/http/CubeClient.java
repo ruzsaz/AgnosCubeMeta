@@ -4,6 +4,7 @@
  */
 package hu.agnos.cube.meta.http;
 
+import com.google.gson.JsonSyntaxException;
 import hu.agnos.cube.meta.dto.CubeNameAndDate;
 import java.io.IOException;
 import java.net.URI;
@@ -56,7 +57,7 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             result = new Gson().fromJson(response.body(), ResultSet[].class);
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
+        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Optional.ofNullable(result);
@@ -76,7 +77,7 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             cubeList = new Gson().fromJson(response.body(), CubeList.class);
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
+        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Optional.ofNullable(cubeList);
@@ -95,7 +96,7 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             cubeList = new Gson().fromJson(response.body(), CubeList.class);
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
+        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (cubeList != null) {
@@ -126,7 +127,7 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             result = new Gson().fromJson(response.body(), String[].class);
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
+        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (result != null) {
@@ -154,7 +155,7 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             result = new Gson().fromJson(response.body(), String[].class);
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
+        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (result != null) {
@@ -182,7 +183,7 @@ public class CubeClient {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
             result = new Gson().fromJson(response.body(), HierarchyDTO.class);
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
+        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (result != null) {

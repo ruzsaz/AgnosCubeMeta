@@ -6,6 +6,7 @@ package hu.agnos.cube.meta.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  *
@@ -15,8 +16,6 @@ public class CubeList {
 
     private List<CubeNameAndDate> cubesNameAndDate;
 
-    
-    
     public CubeList() {
         this.cubesNameAndDate = new ArrayList<>();
     }
@@ -32,11 +31,13 @@ public class CubeList {
     public void setCubesNameAndDate(List<CubeNameAndDate> cubesNameAndDate) {
         this.cubesNameAndDate = cubesNameAndDate;
     }
-    
-    
+
     public int size(){
         return this.cubesNameAndDate.size();
     }
 
-    
+    public boolean containsCubeWithName(String cubeName) {
+        return cubesNameAndDate.stream().anyMatch(e -> e.getName().equals(cubeName));
+    }
+
 }
