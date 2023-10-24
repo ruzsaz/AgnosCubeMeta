@@ -1,10 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package hu.agnos.cube.meta.http;
 
 import com.google.gson.JsonSyntaxException;
+import hu.agnos.cube.meta.drillDto.BaseVectorCoordinate;
+import hu.agnos.cube.meta.drillDto.DrillVector;
+import hu.agnos.cube.meta.drillDto.ReportQuery;
 import hu.agnos.cube.meta.dto.CubeNameAndDate;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +14,8 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import static java.time.temporal.ChronoUnit.SECONDS;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,32 +40,123 @@ public class CubeClient {
         this.serviceBaseUri = serviceBaseUri;
     }
 
-    public Optional<ResultSet[]> getData(String cubeName, String baseVector, String drillVectors) {
+    public Optional<ResultSet[]> getData(String cubeName, ReportQuery query) {
+        Optional<List<String>> optionalHierarchyHeaders = this.getHierarchyHeaderOfCube(cubeName);
         ResultSet[] result = null;
-        try {
-            URI uri = new URIBuilder(serviceBaseUri + "/data")
-                    .addParameter("name", cubeName)
-                    .addParameter("base", baseVector)
-                    .addParameter("drill", drillVectors)
-                    .build();
+        if (optionalHierarchyHeaders.isPresent()) {
+            List<String> hierarchyHeaders = optionalHierarchyHeaders.get();
+            String baseVectorString = createBaseVectorString(hierarchyHeaders, query.baseVector());
+            String drillVectorsString = createDrillVectorsString(hierarchyHeaders, query.drillVectors());
+            System.out.println(cubeName + "  " + baseVectorString + "  " + drillVectorsString);
+            try {
+                URI uri = new URIBuilder(serviceBaseUri + "/data")
+                        .addParameter("name", cubeName)
+                        .addParameter("base", baseVectorString)
+                        .addParameter("drill", drillVectorsString)
+                        .build();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .timeout(Duration.of(20, SECONDS))
-                    .GET()
-                    .build();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(uri)
+                        .timeout(Duration.of(20, SECONDS))
+                        .GET()
+                        .build();
 
-            HttpResponse<String> response = HttpClient.newHttpClient()
-                    .send(request, BodyHandlers.ofString());
-            result = new Gson().fromJson(response.body(), ResultSet[].class);
-        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
-            Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
+                HttpResponse<String> response = HttpClient.newHttpClient()
+                        .send(request, BodyHandlers.ofString());
+                result = new Gson().fromJson(response.body(), ResultSet[].class);
+                // Write back the original drillVectorLabels...
+                // the result's order should be the same as the drillVectors order to make it work.
+                for (int i = 0; i < result.length; i++) {
+                    result[i].setOriginalName(query.drillVectors().get(i).dimsToDrill());
+                }
+            } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
+                Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return Optional.ofNullable(result);
-
     }
 
-    
+    /**
+     * Creates a String that represents a baseVector, like "4:1,17::"
+     * where order of the hierarchies corresponds to the order of hierarchies
+     * in the cube, and the numbers are the element ids in the hierarchy level
+     * where the base of the data is.
+     *
+     * @param hierarchyHeaders Names of the hierarchies in the order inside the cube
+     * @param baseVector Base vector in object form, with the name of the hierarchy,
+     *                   and the base levels in an ordered array
+     * @return The string representation of the base vector, like "4:1,17::"
+     */
+    private String createBaseVectorString(List<String> hierarchyHeaders, List<BaseVectorCoordinate> baseVector) {
+        List<String> result = new ArrayList<>();
+        for (String hierarchyName : hierarchyHeaders) {
+            for (BaseVectorCoordinate coordinate : baseVector) {
+                if (hierarchyName.equals(coordinate.name())) {
+                    result.add(String.join(",", coordinate.levelValues()));
+                    break;
+                }
+            }
+        }
+        return String.join(":", result);
+    }
+
+    /**
+     * Creates a String that represents some drillVectors, like "0:0:1,1:1:0,0:0:0"
+     * where order of the 0-1s corresponds to the order of hierarchies
+     * in the cube, and the separate drillVectors are separated by commas.
+     *
+     * @param hierarchyHeaders Names of the hierarchies in the order inside the cube
+     * @param drillVectors Array of drillVectors, which is an array of hierachy names
+     *                     meaning the hierarchy is part of the drill.
+     * @return The string representation of the drills, like 0:0:1,1:1:0,0:0:0"
+     */
+    private String createDrillVectorsString(List<String> hierarchyHeaders, List<DrillVector> drillVectors) {
+        List<String> result = new ArrayList<>();
+        for (DrillVector drillVector : drillVectors) {
+            result.add(CreateSingleDrillVectorString(hierarchyHeaders, drillVector));
+        }
+        return String.join(",", result);
+    }
+
+    private String CreateSingleDrillVectorString(List<String> hierarchyHeaders, DrillVector drillVector) {
+        List<String> result = new ArrayList<>();
+        for (String hierarchyName : hierarchyHeaders) {
+            if (drillVector.dimsToDrill().contains(hierarchyName)) {
+                result.add(hierarchyName);
+            } else {
+                result.add("0");
+            }
+        }
+        return String.join(":", result);
+    }
+
+//    public Optional<ResultSet[]> getData(String cubeName, String baseVector, String drillVectors) {
+//        ResultSet[] result = null;
+//        try {
+//            URI uri = new URIBuilder(serviceBaseUri + "/data")
+//                    .addParameter("name", cubeName)
+//                    .addParameter("base", baseVector)
+//                    .addParameter("drill", drillVectors)
+//                    .build();
+//
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(uri)
+//                    .timeout(Duration.of(20, SECONDS))
+//                    .GET()
+//                    .build();
+//
+//            HttpResponse<String> response = HttpClient.newHttpClient()
+//                    .send(request, BodyHandlers.ofString());
+//            result = new Gson().fromJson(response.body(), ResultSet[].class);
+//        } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
+//            Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return Optional.ofNullable(result);
+//    }
+
+
+
+
     public Optional<CubeList> getCubesNameAndDate() {
         CubeList cubeList = null;
         try {
@@ -104,15 +196,15 @@ public class CubeClient {
             for (CubeNameAndDate cnd : cubeList.getCubesNameAndDate()) {
                 cubeNames.add(cnd.getName());
             }
-            return Optional.ofNullable(cubeNames);
+            return Optional.of(cubeNames);
         } else {
             return Optional.empty();
         }
 
     }
 
-    public Optional<String[]> getHierarchyHeaderOfCube(String cubeName) {
-        String[] result = null;
+    public Optional<List<String>> getHierarchyHeaderOfCube(String cubeName) {
+        List<String> result;
         try {
             URI uri = new URIBuilder(serviceBaseUri + "/hierarchy_header")
                     .addParameter("name", cubeName)
@@ -126,16 +218,12 @@ public class CubeClient {
 
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, BodyHandlers.ofString());
-            result = new Gson().fromJson(response.body(), String[].class);
+            result = new Gson().fromJson(response.body(), ArrayList.class);
+            return Optional.of(result);
         } catch (URISyntaxException | IOException | InterruptedException | JsonSyntaxException ex) {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (result != null) {
-            return Optional.ofNullable(result);
-        } else {
-            return Optional.empty();
-        }
-
+        return Optional.empty();
     }
 
     public Optional<String[]> getMeasureHeaderOfCube(String cubeName) {
@@ -159,7 +247,7 @@ public class CubeClient {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (result != null) {
-            return Optional.ofNullable(result);
+            return Optional.of(result);
         } else {
             return Optional.empty();
         }
@@ -187,7 +275,7 @@ public class CubeClient {
             Logger.getLogger(CubeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (result != null) {
-            return Optional.ofNullable(result);
+            return Optional.of(result);
         } else {
             return Optional.empty();
         }
