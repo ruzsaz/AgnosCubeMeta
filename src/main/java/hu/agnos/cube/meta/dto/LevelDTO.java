@@ -24,39 +24,15 @@ public class LevelDTO implements java.io.Serializable {
      */
     private final String name;
     
-    /**
-     * A sznthez tartozó azonosítót tartalamzó oszlop neve, szerepe a
-     * cube-ról készült reportnál jelentkezik
-     */
-    private final String idColumnName;
-    
-    /**
-     * A szinthez tartozó kódot tartalamzó oszlop neve, szerepe a
-     * cube-ról készült reportnál jelentkezik
-     */
-    private final String codeColumnName;
-    
-    /**
-     * A szinthez tartozó nevet tartalamzó oszlop neve, szerepe a
-     * cube-ról készült reportnál jelentkezik
-     */    
-    private final String nameColumnName;
-
-    public LevelDTO(int depth, String name, String idColumnName, String codeColumnName, String nameColumnName) {
+    public LevelDTO(int depth, String name) {
         this.depth = depth;
         this.name = name;
-        this.idColumnName = idColumnName;
-        this.codeColumnName = codeColumnName;
-        this.nameColumnName = nameColumnName;
     }
 
     
     public LevelDTO(Level level) {
         this.depth = level.getDepth();
         this.name = level.getName();
-        this.idColumnName = level.getIdColumnName();
-        this.codeColumnName = level.getCodeColumnName();
-        this.nameColumnName = level.getNameColumnName();
     }
 
     public static long getSerialVersionUID() {
@@ -69,19 +45,5 @@ public class LevelDTO implements java.io.Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public String getIdColumnName() {
-        return idColumnName;
-    }
-
-    public String getCodeColumnName() {
-        return codeColumnName;
-    }
-
-    public String getNameColumnName() {
-        return nameColumnName;
-    }
-
-    
+    }    
 }
