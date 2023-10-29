@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package hu.agnos.cube.meta;
-
-import hu.agnos.cube.meta.dto.CubeList;
-import hu.agnos.cube.meta.http.CubeClient;
-import hu.agnos.cube.meta.dto.CubeNameAndDate;
-import java.util.Optional;
 
 /**
  *

@@ -1,9 +1,10 @@
 package hu.agnos.cube.meta.dto;
 
-
 import java.util.Objects;
 
-public record NodeDTO(String id, String knownId, String name) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record NodeDTO(@JsonProperty("id") String knownId, String name) {
 
     @Override
     public boolean equals(Object o) {
