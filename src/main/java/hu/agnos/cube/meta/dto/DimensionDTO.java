@@ -14,7 +14,7 @@ public record DimensionDTO(String name, List<LevelDTO> levels, int maxDepth) {
     public static DimensionDTO fromDimension(Dimension dimension) {
         return new DimensionDTO(dimension.getName(),
                 dimension.getLevels().stream().map(LevelDTO::fromLevel).collect(Collectors.toList()),
-                dimension.getLevelCount());
+                dimension.getMaxDepth());
     }
 
 }

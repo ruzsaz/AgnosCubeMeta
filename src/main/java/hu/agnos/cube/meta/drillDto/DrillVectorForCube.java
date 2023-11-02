@@ -1,4 +1,4 @@
 package hu.agnos.cube.meta.drillDto;
 
-public record DrillVectorForCube(boolean[] drillRequired) {
+public record DrillVectorForCube(DrillScenario[] drillRequired) {
 }
