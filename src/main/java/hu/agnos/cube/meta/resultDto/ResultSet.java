@@ -1,11 +1,11 @@
-package hu.agnos.cube.meta.dto;
+package hu.agnos.cube.meta.resultDto;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import hu.agnos.cube.meta.drillDto.DrillScenario;
-import hu.agnos.cube.meta.drillDto.DrillVector;
+import hu.agnos.cube.meta.queryDto.DrillScenario;
+import hu.agnos.cube.meta.queryDto.DrillVector;
 
 /**
  * Response for a single drill request towards a single cube.
@@ -24,14 +24,14 @@ public record ResultSet(String cubeName, String[] dimensionHeader, List<String> 
     public String toString() {
         StringBuilder sb = new StringBuilder("ResultSet{"
                 + "originalName=" + originalDrill
-                + ", dimensionHeader=" + dimensionHeader
+                + ", dimensionHeader=" + Arrays.toString(dimensionHeader)
                 + ", cubeName=" + cubeName
                 + ", measures=" + String.join(",", measures)
                 + ", originalDrill=" + String.join(",", originalDrill.dimsToDrill())
                 + ", actualDrill=" + Arrays.stream(actualDrill).map(Enum::name).collect(Collectors.joining(","))
                 + ", response:");
 
-        for (ResultElement e : this.response) {
+        for (ResultElement e : response) {
             sb.append("\n\t").append(e.toString());
         }
         sb.append("\n}");

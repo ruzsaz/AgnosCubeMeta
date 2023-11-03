@@ -1,7 +1,6 @@
-package hu.agnos.cube.meta.dto;
+package hu.agnos.cube.meta.resultDto;
 
 import hu.agnos.cube.dimension.Level;
-import lombok.Getter;
 
 /**
  * @param depth Depth of this level in the dimension (0 is the root element's level)

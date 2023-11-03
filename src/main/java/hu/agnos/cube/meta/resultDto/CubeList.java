@@ -1,10 +1,6 @@
-package hu.agnos.cube.meta.dto;
+package hu.agnos.cube.meta.resultDto;
 
 import java.util.Map;
 
-/**
- *
- * @author parisek
- */
 public record CubeList(Map<String, CubeMetaDTO> cubeMap) {
 }

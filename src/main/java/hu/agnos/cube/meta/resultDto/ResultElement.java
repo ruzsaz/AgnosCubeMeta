@@ -1,11 +1,10 @@
-package hu.agnos.cube.meta.dto;
+package hu.agnos.cube.meta.resultDto;
 
 /**
  * Ez az osztály az eredményhalmaz egy sorát reprzentálja
  *
  * @author ruzsaz
  */
-
 public record ResultElement(NodeDTO[] header, double[] measureValues, int drillVectorId) {
 
     @Override
@@ -35,10 +34,8 @@ public record ResultElement(NodeDTO[] header, double[] measureValues, int drillV
     public ResultElement deepCopy() {
         NodeDTO[] tempHeader = new NodeDTO[header.length];
         System.arraycopy(header, 0, tempHeader, 0, header.length);
-
         double[] tempMeasureValues = new double[measureValues.length];
         System.arraycopy(measureValues, 0, tempMeasureValues, 0, measureValues.length);
-
         return new ResultElement(tempHeader, tempMeasureValues, drillVectorId);
     }
 

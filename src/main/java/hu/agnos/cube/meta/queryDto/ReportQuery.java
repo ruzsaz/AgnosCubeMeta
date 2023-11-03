@@ -1,4 +1,4 @@
-package hu.agnos.cube.meta.drillDto;
+package hu.agnos.cube.meta.queryDto;
 
 import java.util.List;
 
