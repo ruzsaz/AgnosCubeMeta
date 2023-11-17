@@ -8,7 +8,7 @@ import hu.agnos.cube.meta.queryDto.DrillScenario;
 import hu.agnos.cube.meta.queryDto.DrillVector;
 
 /**
- * Response for a single drill request towards a single cube.
+ * Response for a single drill request from a single cube.
  * Contains some meta-info for the drill, and the results.
  *
  * @param cubeName Name of the cube who answers for the drill in this ResultSet
@@ -37,13 +37,5 @@ public record ResultSet(String cubeName, String[] dimensionHeader, List<String> 
         sb.append("\n}");
         return sb.toString();
     }
-
-//    public ResultSet deepCopy() {
-//        ResultSet result = new ResultSet(new String(name));
-//        for (ResultElement r : this.response) {
-//            result.addResponse(r);
-//        }
-//        return result;
-//    }
 
 }
