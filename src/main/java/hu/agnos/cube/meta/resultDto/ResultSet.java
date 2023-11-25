@@ -18,7 +18,12 @@ import hu.agnos.cube.meta.queryDto.DrillVector;
  * @param actualDrill Vector of the actual drill made in each coordinate
  * @param response The result "data rows", as (dimension values) ->  (result values)
  */
-public record ResultSet(String cubeName, String[] dimensionHeader, List<String> measures, DrillVector originalDrill, DrillScenario[] actualDrill, List<ResultElement> response) {
+public record ResultSet(String cubeName,
+                        String[] dimensionHeader,
+                        List<String> measures,
+                        DrillVector originalDrill,
+                        DrillScenario[] actualDrill,
+                        List<ResultElement> response) {
 
     @Override
     public String toString() {
