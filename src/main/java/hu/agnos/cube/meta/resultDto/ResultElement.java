@@ -5,7 +5,7 @@ package hu.agnos.cube.meta.resultDto;
  *
  * @author ruzsaz
  */
-public record ResultElement(NodeDTO[] header, double[] measureValues, int drillVectorId) {
+public record ResultElement(NodeDTO[] header, double[] measureValues) {
 
     @Override
     public String toString() {
@@ -36,7 +36,7 @@ public record ResultElement(NodeDTO[] header, double[] measureValues, int drillV
         System.arraycopy(header, 0, tempHeader, 0, header.length);
         double[] tempMeasureValues = new double[measureValues.length];
         System.arraycopy(measureValues, 0, tempMeasureValues, 0, measureValues.length);
-        return new ResultElement(tempHeader, tempMeasureValues, drillVectorId);
+        return new ResultElement(tempHeader, tempMeasureValues);
     }
 
 }
