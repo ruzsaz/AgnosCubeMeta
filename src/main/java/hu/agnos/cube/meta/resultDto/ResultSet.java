@@ -8,7 +8,7 @@ import hu.agnos.cube.meta.queryDto.DrillScenario;
 import hu.agnos.cube.meta.queryDto.DrillVector;
 
 /**
- * Response for a single drill request from a single cube.
+ * CubeServer -> ReportServer dto. Response for a single drill request from a single cube.
  * Contains some meta-info for the drill, and the results.
  *
  * @param cubeName Name of the cube who answers for the drill in this ResultSet
