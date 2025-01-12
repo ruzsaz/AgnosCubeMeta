@@ -3,12 +3,14 @@ package hu.agnos.cube.meta.queryDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 /**
  *
  */
 @Getter
 @AllArgsConstructor
-public enum DrillScenario {
+public enum DrillScenario implements Serializable {
 
     DRILL(true, true, false),
     NOT_REQUESTED(false, false, false),

@@ -1,8 +1,9 @@
 package hu.agnos.cube.meta.queryDto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public record DrillVectorForCube(DrillScenario[] drillRequired) {
+public record DrillVectorForCube(DrillScenario[] drillRequired) implements Serializable {
 
     @Override
     public boolean equals(Object o) {

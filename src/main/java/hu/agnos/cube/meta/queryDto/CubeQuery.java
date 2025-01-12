@@ -1,9 +1,10 @@
 package hu.agnos.cube.meta.queryDto;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public record CubeQuery(String cubeName, String cubeHash, DrillVector originalDrill, List<BaseVectorCoordinateForCube> baseVector, DrillVectorForCube drillVector) {
+public record CubeQuery(String cubeName, String cubeHash, DrillVector originalDrill, List<BaseVectorCoordinateForCube> baseVector, DrillVectorForCube drillVector) implements Serializable {
 
     @Override
     public boolean equals(Object o) {

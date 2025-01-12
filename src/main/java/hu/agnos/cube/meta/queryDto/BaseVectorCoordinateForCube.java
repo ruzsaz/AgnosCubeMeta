@@ -1,8 +1,9 @@
 package hu.agnos.cube.meta.queryDto;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public record BaseVectorCoordinateForCube(String dimensionName, String levelValuesString) {
+public record BaseVectorCoordinateForCube(String dimensionName, String levelValuesString) implements Serializable {
 
     @Override
     public boolean equals(Object o) {

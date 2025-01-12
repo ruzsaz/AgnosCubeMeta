@@ -1,11 +1,13 @@
 package hu.agnos.cube.meta.resultDto;
 
+import java.io.Serializable;
+
 /**
  * Ez az osztály az eredményhalmaz egy sorát reprzentálja
  *
  * @author ruzsaz
  */
-public record ResultElement(NodeDTO[] header, double[] measureValues) {
+public record ResultElement(NodeDTO[] header, double[] measureValues) implements Serializable {
 
     @Override
     public String toString() {

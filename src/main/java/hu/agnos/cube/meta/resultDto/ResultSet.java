@@ -1,5 +1,6 @@
 package hu.agnos.cube.meta.resultDto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,8 @@ public record ResultSet(String cubeName,
                         List<String> measures,
                         DrillVector originalDrill,
                         DrillScenario[] actualDrill,
-                        List<ResultElement> response) {
+                        List<ResultElement> response)
+        implements Serializable {
 
     @Override
     public String toString() {
