@@ -1,6 +1,7 @@
 package hu.agnos.cube.meta.resultDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hu.agnos.cube.dimension.Node;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -23,6 +24,10 @@ public record NodeDTO(@JsonProperty("id") String knownId, String name) implement
     @Override
     public int hashCode() {
         return Objects.hash(knownId);
+    }
+
+    public static NodeDTO fromNode(Node node) {
+        return new NodeDTO(node.getCode(), node.getName());
     }
 
 }
